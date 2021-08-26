@@ -1,12 +1,13 @@
 let dragging;
 class Sortable {
    constructor(sortableSelector, options) {
-      this.items = null;
       this.sortableSelector = sortableSelector;
-      this.placeholder = null;
       this.options = options || "";
+      this.items = null;
+      this.placeholder = null;
       this.deactiveElemClass = null;
       this.placeholderStyleClass = null;
+
       this.init();
    }
 
@@ -14,47 +15,6 @@ class Sortable {
       console.log("options = ", "----", this.options);
       console.log("destroy.test = ", /destroy/.test(this.options));
       //executeOption()
-      if (/destroy/.test(this.options)) {
-         this.destroySortable();
-         return;
-      } else if (/disable/.test(this.options)) {
-         // console.log('disable ON')
-         // console.log('this.options = ', this.options)
-         this.placeholder.removeEventListener("dragover", this.dragoverHandler);
-         this.placeholder.removeEventListener("drop", this.dropHandler);
-         return;
-      } else if (/enable/.test(this.options)) {
-         // console.log('enable ON')
-         // console.log('this.options = ', this.options)
-         this.placeholder.addEventListener("dragover", this.dragoverHandler);
-         this.placeholder.addEventListener("drop", this.dropHandler);
-         return;
-      } else if (/deactive-elem/.test(this.options)) {
-         this.deactivateElem();
-         return;
-         // console.log('DraggableLiItems = ', draggableLiItems)
-      } else if (/activate-elem/.test(this.options)) {
-         if (!this.items) {
-            console.error(
-               `activateElems: this.items can\'t be undefined or null, so the list of elements <<${this.deactiveElemClass}>> can't be activated`
-            );
-            return;
-         }
-         const deactiveLiItems = Array.from(this.items).filter((li) => li.matches(this.deactiveElemClass));
-         // console.log('deactiveElems = ', deactiveLiItems)
-         if (!deactiveLiItems || deactiveLiItems.length === 0) {
-            console.error(
-               `activateElems of class <<${this.deactiveElemClass}>> are absent, so that it's impossible to activate them`
-            );
-            return;
-         }
-         deactiveLiItems.forEach((item) => {
-            item.classList.remove("disabled");
-            // console.log('GetAttribute Draggable = ', item.getAttribute('draggable'))
-            item.setAttribute("draggable", "true");
-         });
-         return;
-      }
 
       // console.log('after Destroy')
       // console.log('this.SortableSelector = ', this.sortableSelector)
@@ -92,9 +52,12 @@ class Sortable {
          return;
       }
       draggableLiItems.forEach((item) => {
-         item.addEventListener("mouseenter", () => (item.style.opacity = ".6"));
-         item.addEventListener("mouseleave", () => (item.style.opacity = "1"));
-
+         item.addEventListener("mouseenter", () => {
+            if (!item.matches(this.deactiveElemClass)) item.style.opacity = ".6";
+         });
+         item.addEventListener("mouseleave", () => {
+            if (!item.matches(this.deactiveElemClass)) item.style.opacity = "1";
+         });
          item.addEventListener("dragstart", this.dragstartHandler);
          item.addEventListener("dragend", (e) => item.classList.remove("sortable-dragging"));
       });
@@ -214,6 +177,7 @@ class Sortable {
       }
       e.preventDefault();
       e.dataTransfer.dropEffect = "move";
+      console.log("drag over");
       // console.log(e.dataTransfer.getData('text/plain'))
       // this.placeholder.parentElement.addEventListener('onsort', ()=> console.log('OnSort'))
       // this.placeholder.parentElement.dispatchEvent(new CustomEvent('onsort'))
@@ -228,6 +192,50 @@ class Sortable {
    //                 return true
    //     return false
    // }
+
+   executeOption() {
+      if (/destroy/.test(this.options)) {
+         this.destroySortable();
+         return;
+      } else if (/disable/.test(this.options)) {
+         // console.log('disable ON')
+         // console.log('this.options = ', this.options)
+         this.placeholder.removeEventListener("dragover", this.dragoverHandler);
+         this.placeholder.removeEventListener("drop", this.dropHandler);
+         return;
+      } else if (/enable/.test(this.options)) {
+         // console.log('enable ON')
+         // console.log('this.options = ', this.options)
+         this.placeholder.addEventListener("dragover", this.dragoverHandler);
+         this.placeholder.addEventListener("drop", this.dropHandler);
+         return;
+      } else if (/deactive-elem/.test(this.options)) {
+         this.deactivateElem();
+         return;
+         // console.log('DraggableLiItems = ', draggableLiItems)
+      } else if (/activate-elem/.test(this.options)) {
+         if (!this.items) {
+            console.error(
+               `activateElems: this.items can\'t be undefined or null, so the list of elements <<${this.deactiveElemClass}>> can't be activated`
+            );
+            return;
+         }
+         const deactiveLiItems = Array.from(this.items).filter((li) => li.matches(this.deactiveElemClass));
+         // console.log('deactiveElems = ', deactiveLiItems)
+         if (!deactiveLiItems || deactiveLiItems.length === 0) {
+            console.error(
+               `activateElems of class <<${this.deactiveElemClass}>> are absent, so that it's impossible to activate them`
+            );
+            return;
+         }
+         deactiveLiItems.forEach((item) => {
+            item.classList.remove("disabled");
+            // console.log('GetAttribute Draggable = ', item.getAttribute('draggable'))
+            item.setAttribute("draggable", "true");
+         });
+         return;
+      }
+   }
 
    addOption(option) {
       option = option.toLowerCase();
@@ -318,7 +326,7 @@ class Sortable {
          // console.log('this.options', this.options)
       }
 
-      this.init();
+      this.executeOption();
       // console.log(this)
    }
 }
@@ -337,7 +345,7 @@ const sortable = new Sortable(".sortable", "connected");
 const connected = new Sortable(".connected");
 // // sortable.addOption('enable')
 // // sortable.addOption('destroy')
-// // connected.addOption('deactive-elem :not(.other)')
+connected.addOption("deactive-elem :not(.other)");
 // connected.addOption('deactive-elem')
 
 // connected.addOption('activate-elem')
