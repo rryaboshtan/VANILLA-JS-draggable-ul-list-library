@@ -1,7 +1,7 @@
-import _debounce from "./debounce";
-import _throttle from "./throttle";
-import _filter from "./filter";
-import _serialize from "./serialize";
+import _debounce from './debounce';
+import _throttle from './throttle';
+import _filter from './filter';
+import _serialize from './serialize';
 
 let dragging;
 //========================================main class============================================
@@ -124,6 +124,27 @@ class Sortable {
          // item.removeEventListener('dragend', e => item.classList.remove('sortable-dragging'))
       });
    }
+   activateElem() {
+      if (!this.items) {
+         console.error(
+            `activateElems: this.items can\'t be undefined or null, so the list of elements <<${this.deactiveElemClass}>> can't be activated`
+         );
+         return;
+      }
+      const deactiveLiItems = Array.from(this.items).filter((li) => li.matches(this.deactiveElemClass));
+      // console.log('deactiveElems = ', deactiveLiItems)
+      if (!deactiveLiItems || deactiveLiItems.length === 0) {
+         console.error(
+            `ExecuteOption: activateElems of class <<${this.deactiveElemClass}>> are absent, so that it's impossible to activate them`
+         );
+         return;
+      }
+      deactiveLiItems.forEach((item) => {
+         item.classList.remove('disabled');
+         // console.log('GetAttribute Draggable = ', item.getAttribute('draggable'))
+         item.setAttribute('draggable', 'true');
+      });
+   }
 
    dragstartHandler = (e) => {
       e.stopPropagation();
@@ -192,30 +213,6 @@ class Sortable {
       // }
    };
 
-   //    dragoverHandler = (e) => {
-   //       // this.placeholder = null
-   //       if (!this.placeholder) {
-   //          console.error("dragoverHandler: this.placeholder can't be null or undefined");
-   //          return;
-   //       }
-   //       e.preventDefault();
-   //       e.dataTransfer.dropEffect = "move";
-   //       console.log("drag over");
-   //       // console.log(e.dataTransfer.getData('text/plain'))
-   //       // this.placeholder.parentElement.addEventListener('onsort', ()=> console.log('OnSort'))
-   //       // this.placeholder.parentElement.dispatchEvent(new CustomEvent('onsort'))
-   //       // if (e.target !== this.placeholder && e.target !== this.placeholder.parentElement) {
-   //       // }
-   //    };
-
-   // isBefore(el1, el2) {
-   //     if (el2.parentNode === el1.parentNode && el1.previousSibling)
-   //         for (let cur = el1.previousSibling; cur && cur.nodeType !== 9; cur = cur.previousSibling)
-   //             if (cur === el2)
-   //                 return true
-   //     return false
-   // }
-
    executeOption() {
       if (/destroy/.test(this.options)) {
          this.destroySortable();
@@ -237,25 +234,7 @@ class Sortable {
          return;
          // console.log('DraggableLiItems = ', draggableLiItems)
       } else if (/activate-elem/.test(this.options)) {
-         if (!this.items) {
-            console.error(
-               `activateElems: this.items can\'t be undefined or null, so the list of elements <<${this.deactiveElemClass}>> can't be activated`
-            );
-            return;
-         }
-         const deactiveLiItems = Array.from(this.items).filter((li) => li.matches(this.deactiveElemClass));
-         // console.log('deactiveElems = ', deactiveLiItems)
-         if (!deactiveLiItems || deactiveLiItems.length === 0) {
-            console.error(
-               `activateElems of class <<${this.deactiveElemClass}>> are absent, so that it's impossible to activate them`
-            );
-            return;
-         }
-         deactiveLiItems.forEach((item) => {
-            item.classList.remove('disabled');
-            // console.log('GetAttribute Draggable = ', item.getAttribute('draggable'))
-            item.setAttribute('draggable', 'true');
-         });
+         this.activateElem();
          return;
       }
    }
@@ -278,14 +257,7 @@ class Sortable {
             // item.addEventListener('dragend', e => item.classList.remove('sortable-dragging'))
          });
          console.log('draggable items = ', draggableLiItems);
-
-         // this.placeholder.classList.remove(this.placeholderStyleClass)
-
-         // this.placeholderStyleClass = optionArgs[1].substring(1, optionArgs[1].length)
          // console.log('optionArgs[1] = ', optionArgs[1].substring(1, optionArgs[1].length))
-
-         // this.placeholder.classList.add(this.placeholderStyleClass)
-
          return;
       }
 
