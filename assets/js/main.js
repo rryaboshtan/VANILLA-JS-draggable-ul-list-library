@@ -36,13 +36,44 @@ function _debounce(fn, delay = 250) {
    };
 }
 
-function filter(arr, selector) {
+function _filter(arr, selector) {
    if (typeof selector !== 'string') {
       console.error('Filter: selector must be only a string');
       return Array.from(arr);
    }
 
    return Array.from(arr).filter((item) => item.nodeType === 1 && item.matches(selector));
+}
+
+function serialize(
+   sortableContainer,
+   customItemSerializer = (serializedItem, sortableContainer) => serializedItem,
+   customContainerSerializer = (serializedContainer) => serializedContainer
+) {
+   if (typeof customItemSerializer !== 'function' || typeof customContainerSerializer !== 'function') {
+      console.error('Serialize: You need to provide a valid serializer for items and the container')
+      return;
+   }
+
+   // const items = _filter(sortableContainer.children, )
+   const items = sortableContainer.children;
+   const serializedItems = items.map((item, index) => {
+      return {
+         parent: sortableContainer,
+         node: item,
+         html: item.innerHTML || '',
+         index : index,
+      };
+   })
+   const container = {
+      node: sortableContainer,
+      itemCount: serializedItems.length,
+   }
+
+   return {
+      container: customContainerSerializer(container),
+      items: serializedItems.map(item => customItemSerializer(item, sortableContainer)),
+   }
 }
 
 let dragging;
