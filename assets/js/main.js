@@ -36,18 +36,18 @@ class Sortable {
          // console.log('DraggableLiItems = ', draggableLiItems)
       } else if (/activate-elem/.test(this.options)) {
          if (!this.items) {
-            // throw Error(`activateElems: this.items can\'t be Undefined or null, so the list of elements <<${this.deactiveElemClass}>> can't be activated`)
             console.error(
-               `activateElems: this.items can\'t be Undefined or null, so the list of elements <<${this.deactiveElemClass}>> can't be activated`
+               `activateElems: this.items can\'t be undefined or null, so the list of elements <<${this.deactiveElemClass}>> can't be activated`
             );
+            return;
          }
          const deactiveLiItems = Array.from(this.items).filter((li) => li.matches(this.deactiveElemClass));
          // console.log('deactiveElems = ', deactiveLiItems)
          if (!deactiveLiItems || deactiveLiItems.length === 0) {
-            // throw Error(`activateElems of class <<${this.deactiveElemClass}>> are absent, so that it's impossible to activate them`)
             console.error(
                `activateElems of class <<${this.deactiveElemClass}>> are absent, so that it's impossible to activate them`
             );
+            return;
          }
          deactiveLiItems.forEach((item) => {
             item.classList.remove("disabled");
@@ -63,9 +63,18 @@ class Sortable {
       // console.log('children = ', document.querySelector(this.sortableSelector).children)
       // this.items = document.querySelector(this.sortableSelector).children
       this.items = document.querySelectorAll(`${this.sortableSelector} li`);
+      if (!this.items) {
+         console.error(
+            `Init: this.items can\'t be undefined or null, so the Elems <<${this.sortableSelector}>> can't be destroyed`
+         );
+         return;
+      }
 
       const plh = (this.placeholder = this.items[0]);
-      if (!plh) return;
+      if (!plh) {
+         console.error("Init: this.placeholder can't be null or undefined");
+         return;
+      }
 
       console.log("this.placeholder = ", this.placeholder);
       console.log("this.items = ", this.items);
@@ -91,10 +100,10 @@ class Sortable {
    destroySortable() {
       // this.items = null
       if (!this.items) {
-         // throw Error(`destroySortable: this.items can\'t be Undefined or null, so the Elems <<${this.sortableSelector}>> can't be destroyed`)
          console.error(
-            `destroySortable: this.items can\'t be Undefined or null, so the Elems <<${this.sortableSelector}>> can't be destroyed`
+            `destroySortable: this.items can\'t be undefined or null, so the Elems <<${this.sortableSelector}>> can't be destroyed`
          );
+         return;
       }
       const draggableLiItems = Array.from(this.items).filter((li) => li.matches(`[draggable='true']`));
       draggableLiItems.forEach((item) => {
@@ -115,10 +124,10 @@ class Sortable {
    deactivateElem() {
       // this.items = null
       if (!this.items) {
-         // throw Error(`deactivateElems: this.items can\'t be Undefined or null, so the list of elements <<${this.deactiveElemClass}>> can't be deactivated`)
          console.error(
-            `deactivateElems: this.items can\'t be Undefined or null, so the list of elements <<${this.deactiveElemClass}>> can't be deactivated`
+            `deactivateElems: this.items can\'t be undefined or null, so the list of elements <<${this.deactiveElemClass}>> can't be deactivated`
          );
+         return;
       }
       console.log("this.items = ", this.items);
       console.log("this.deactiveElemClass = ", this.deactiveElemClass);
@@ -126,10 +135,10 @@ class Sortable {
       const deactiveLiItems = Array.from(this.items).filter((li) => li.matches(this.deactiveElemClass));
       console.log("deactiveLiItems", deactiveLiItems);
       if (!deactiveLiItems || deactiveLiItems.length === 0) {
-         // throw Error(`deactivateElems of class <<${this.deactiveElemClass}>> are absent, so that it's impossible to deactivate them`)
          console.error(
             `deactivateElems of class <<${this.deactiveElemClass}>> are absent, so that it's impossible to deactivate them`
          );
+         return;
       }
       console.log("deactiveElems = ", deactiveLiItems);
       deactiveLiItems.forEach((item) => {
@@ -161,6 +170,7 @@ class Sortable {
       // }
       // console.log('this.placeholder = ', this.placeholder)
       if (!this.placeholder) {
+         console.error("dropHandler: this.placeholder can't be null or undefined");
          return;
       }
       // console.log('dragging = ', dragging)
@@ -194,6 +204,7 @@ class Sortable {
    dragoverHandler = (e) => {
       // this.placeholder = null
       if (!this.placeholder) {
+         console.error("dragoverHandler: this.placeholder can't be null or undefined");
          return;
       }
       e.preventDefault();
@@ -205,11 +216,13 @@ class Sortable {
       // }
    };
 
-   isBefore(el1, el2) {
-      if (el2.parentNode === el1.parentNode && el1.previousSibling)
-         for (let cur = el1.previousSibling; cur && cur.nodeType !== 9; cur = cur.previousSibling) if (cur === el2) return true;
-      return false;
-   }
+   // isBefore(el1, el2) {
+   //     if (el2.parentNode === el1.parentNode && el1.previousSibling)
+   //         for (let cur = el1.previousSibling; cur && cur.nodeType !== 9; cur = cur.previousSibling)
+   //             if (cur === el2)
+   //                 return true
+   //     return false
+   // }
 
    addOption(option) {
       option = option.toLowerCase();
@@ -316,19 +329,19 @@ class Sortable {
 // }
 
 const sortable = new Sortable(".sortable", "connected");
-const connected = new Sortable(".connected");
-// sortable.addOption('enable')
-// sortable.addOption('destroy')
-// connected.addOption('deactive-elem :not(.other)')
-connected.addOption("deactive-elem");
+// const connected = new Sortable('.connected')
+// // sortable.addOption('enable')
+// // sortable.addOption('destroy')
+// // connected.addOption('deactive-elem :not(.other)')
+// connected.addOption('deactive-elem')
 
-connected.addOption("activate-elem");
-sortable.addOption("placeholder-class .red");
+// connected.addOption('activate-elem')
+// sortable.addOption('placeholder-class .red')
 
-sortable.addOption("placeholder-class .yellow");
-sortable.addOption("placeholder-class .red");
-sortable.addOption("placeholder-class .yellow");
-sortable.addOption("drag-image example.gif");
+// sortable.addOption('placeholder-class .yellow')
+// sortable.addOption('placeholder-class .red')
+// sortable.addOption('placeholder-class .yellow')
+// sortable.addOption('drag-image example.gif')
 
 // sortable.addOption('destroy')
 
