@@ -6,7 +6,8 @@ class Sortable {
       this.sortableSelector = sortableSelector;
       this.placeholder = null;
       this.options = options || "";
-      this.deactiveElemClass;
+      this.deactiveElemClass = null;
+      this.placeholderStyleClass = null;
       this.init();
    }
 
@@ -15,7 +16,7 @@ class Sortable {
       console.log("destroy.test = ", /destroy/.test(this.options));
       //executeOption()
       if (/destroy/.test(this.options)) {
-         this.destroyList();
+         this.destroySortable();
          return;
       } else if (/disable/.test(this.options)) {
          // console.log('disable ON')
@@ -69,11 +70,12 @@ class Sortable {
       console.log("this.items = ", this.items);
 
       plh.classList.add("sortable-placeholder");
+      plh.parentElement.style.userSelect = "none";
       plh.addEventListener("dragover", this.dragoverHandler);
       plh.addEventListener("drop", this.dropHandler);
-      if (/connected/.test(this.options)) {
-         this.placeholder.parentElement.data = { connectWith: "connected" };
-      }
+      // if (/connected/.test(this.options)) {
+      //     this.placeholder.parentElement.data = { connectWith: 'connected' }
+      // }
 
       // console.log(this.placeholder.parentElement.data)
       const draggableLiItems = Array.from(this.items).filter((li) => li.matches(`[draggable='true']`));
@@ -85,7 +87,7 @@ class Sortable {
 
       this.placeholder.parentElement.addEventListener("onsort", () => console.log("Custom Event Fired"));
    }
-   destroyList() {
+   destroySortable() {
       const draggableLiItems = Array.from(this.items).filter((li) => li.matches(`[draggable='true']`));
       draggableLiItems.forEach((item) => {
          item.removeEventListener("dragstart", this.dragstartHandler);
@@ -175,28 +177,29 @@ class Sortable {
       option = option.toLowerCase();
       let activateElemIndex = option.indexOf("activate-elem");
       if (activateElemIndex > -1) {
-         console.log("this.Options = ", this.options);
+         // console.log('Split option', option.split(/\s\s*/))
+         // console.log('this.Options = ', this.options)
          let deactiveElemIndex = this.options.indexOf("deactive-elem");
          if (deactiveElemIndex > -1) {
-            console.log("this.options.substring(0, deactiveElemIndex)", this.options.substring(0, deactiveElemIndex));
+            // console.log('this.options.substring(0, deactiveElemIndex)', this.options.substring(0, deactiveElemIndex))
             this.options =
                this.options.substring(0, deactiveElemIndex) +
                this.options.substring(deactiveElemIndex + "deactive-elem".length - 1, this.options.length - 1);
             // this.options.trim()
          }
          console.log("this.Options = ", this.options);
-         this.deactiveElemClass = option.substring(activateElemIndex + "activate-elem".length, option.length).trim();
+         this.deactiveElemClass = option.split(/\s\s*/)[1];
 
-         option = option.substr(activateElemIndex, "activate-elem".length);
+         option = option.split(/\s\s*/)[0];
 
          console.log("this.deactiveElemClass = ", this.deactiveElemClass);
       }
 
       let deactiveElemIndex = option.indexOf("deactive-elem");
       if (deactiveElemIndex > -1) {
-         this.deactiveElemClass = option.substring(deactiveElemIndex + "deactive-elem".length, option.length).trim();
+         this.deactiveElemClass = option.split(/\s\s*/)[1];
 
-         option = option.substr(deactiveElemIndex, "deactive-elem".length);
+         option = option.split(/\s\s*/)[0];
 
          console.log("this.deactiveElemClass = ", this.deactiveElemClass);
       }
@@ -239,8 +242,8 @@ class Sortable {
 const sortable = new Sortable(".sortable", "connected");
 const connected = new Sortable(".connected");
 // sortable.addOption('enable')
-sortable.addOption("destroy");
+// sortable.addOption('destroy')
 // connected.addOption('deactive-elem :not(.other)')
-// connected.addOption('deactive-elem .other')
+connected.addOption("deactive-elem      .other");
 
-// connected.addOption('activate-elem .other')
+connected.addOption("activate-elem         .other");
