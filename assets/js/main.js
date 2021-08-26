@@ -27,6 +27,16 @@ class Sortable {
          console.log("this=", this);
 
          return;
+      } else if (/disable/.test(this.options)) {
+         // console.log('disable = ')
+         // const draggableLiItems = Array.from(this.items).filter(li => li.matches(`[draggable='true']`))
+         // draggableLiItems.forEach(item => {
+         //     item.removeEventListener('dragstart', this.dragstartHandler)
+         //     // item.addEventListener('dragend.h5s', e => item.classList.remove('sortable-dragging'))
+         // })
+         this.placeholder.removeEventListener("dragover", this.dragoverHandler);
+         this.placeholder.removeEventListener("drop", this.dropHandler);
+         return;
       }
 
       // console.log('after Destroy')
@@ -147,4 +157,4 @@ class Sortable {
 
 const sortable = new Sortable(".sortable", "connected");
 const connected = new Sortable(".connected");
-sortable.addOptions("destroy");
+sortable.addOptions("disable");
