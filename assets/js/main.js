@@ -1,4 +1,43 @@
+function _throttle(fn, delay = 250) {
+   if (typeof fn !== "function") {
+      console.error("you must provide a function as the first argument for throttle");
+      return;
+   }
+   if (typeof delay !== "number") {
+      console.error("you must provide a number as the second argument for throttle");
+   }
+
+   let lastEventTimeStamp = null;
+
+   return (...args) => {
+      const now = Date.now();
+    //    console.log("Date.now = ", now, "lastEventTimeStamp = ", lastEventTimeStamp);
+    //    console.log("now - lastEventTimeStamp = ", now - lastEventTimeStamp);
+      if (lastEventTimeStamp === null || now - lastEventTimeStamp >= delay) {
+         lastEventTimeStamp = now;
+         fn.apply(this, args);
+      }
+   };
+}
+
+function _debounce(fn, delay = 250) {
+   let timer = null;
+
+   if (delay === 0) {
+      return fn;
+   }
+
+   return function (...args) {
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+         fn.apply(this, args);
+         console.log("Args = ", args);
+      }, delay);
+   };
+}
+
 let dragging;
+//========================================main class============================================
 class Sortable {
    constructor(sortableSelector, options) {
       this.sortableSelector = sortableSelector;
@@ -39,6 +78,7 @@ class Sortable {
 
       plh.classList.add("sortable-placeholder");
       plh.parentElement.style.userSelect = "none";
+      //   this.dragoverHandler = (_debounce(this.dragoverHandler, 200))(e);
       plh.addEventListener("dragover", this.dragoverHandler);
       plh.addEventListener("drop", this.dropHandler);
       // if (/connected/.test(this.options)) {
@@ -169,21 +209,38 @@ class Sortable {
       e.preventDefault();
    };
 
-   dragoverHandler = (e) => {
-      // this.placeholder = null
-      if (!this.placeholder) {
-         console.error("dragoverHandler: this.placeholder can't be null or undefined");
-         return;
-      }
-      e.preventDefault();
-      e.dataTransfer.dropEffect = "move";
-      console.log("drag over");
-      // console.log(e.dataTransfer.getData('text/plain'))
-      // this.placeholder.parentElement.addEventListener('onsort', ()=> console.log('OnSort'))
-      // this.placeholder.parentElement.dispatchEvent(new CustomEvent('onsort'))
-      // if (e.target !== this.placeholder && e.target !== this.placeholder.parentElement) {
-      // }
-   };
+      dragoverHandler = (e) => {
+         // this.placeholder = null
+         if (!this.placeholder) {
+            console.error("dragoverHandler: this.placeholder can't be null or undefined");
+            return;
+         }
+         e.preventDefault();
+         e.dataTransfer.dropEffect = "move";
+         console.log("drag over Function");
+         // console.log(e.dataTransfer.getData('text/plain'))
+         // this.placeholder.parentElement.addEventListener('onsort', ()=> console.log('OnSort'))
+         // this.placeholder.parentElement.dispatchEvent(new CustomEvent('onsort'))
+         // if (e.target !== this.placeholder && e.target !== this.placeholder.parentElement) {
+         // }
+      };
+
+
+   //    dragoverHandler = (e) => {
+   //       // this.placeholder = null
+   //       if (!this.placeholder) {
+   //          console.error("dragoverHandler: this.placeholder can't be null or undefined");
+   //          return;
+   //       }
+   //       e.preventDefault();
+   //       e.dataTransfer.dropEffect = "move";
+   //       console.log("drag over");
+   //       // console.log(e.dataTransfer.getData('text/plain'))
+   //       // this.placeholder.parentElement.addEventListener('onsort', ()=> console.log('OnSort'))
+   //       // this.placeholder.parentElement.dispatchEvent(new CustomEvent('onsort'))
+   //       // if (e.target !== this.placeholder && e.target !== this.placeholder.parentElement) {
+   //       // }
+   //    };
 
    // isBefore(el1, el2) {
    //     if (el2.parentNode === el1.parentNode && el1.previousSibling)
