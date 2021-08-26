@@ -3,9 +3,12 @@
 ::after {
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-header, section {
+header,
+section {
   display: block;
 }
 
@@ -25,28 +28,36 @@ h2 {
   width: 460px;
 }
 
-.connected, .sortable {
+.connected,
+.sortable {
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
   margin: auto;
-  padding: 0;
 }
 
-.connected.list, .sortable.list {
+.connected.list,
+.sortable.list {
   width: 300px;
 }
 
-.connected.grid, .sortable.grid {
+.connected.grid,
+.sortable.grid {
   width: 410px;
   overflow: hidden;
 }
 
-.connected.grid li, .sortable.grid li {
+.connected.grid li,
+.sortable.grid li {
   line-height: 80px;
   width: 80px;
   height: 80px;
   text-align: center;
 }
 
-.connected li, .sortable li {
+.connected li,
+.sortable li {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -56,28 +67,40 @@ h2 {
   list-style: none;
   border: 1px solid #ccc;
   background-color: #f6f6f6;
-  font-family: 'Tahoma';
+  font-family: "Tahoma";
   color: #1c94c4;
   margin: 5px;
   padding: 5px;
   height: 22px;
 }
 
-.connected li.sortable-placeholder, .sortable li.sortable-placeholder {
-  border: 1px dashed #ccc;
+.connected li.sortable-placeholder,
+.sortable li.sortable-placeholder {
+  border: 3px dashed #3a2323;
   background: none;
 }
 
-.connected li[draggable="true"], .sortable li[draggable="true"] {
+.connected li[draggable="true"],
+.sortable li[draggable="true"] {
   border-color: #000;
 }
 
-.connected li.sortable-dragging, .sortable li.sortable-dragging {
+.connected li.sortable-dragging,
+.sortable li.sortable-dragging {
   border-color: #1c94c4;
   cursor: -webkit-grab;
   cursor: grab;
 }
 
-.connected li.highlight, .sortable li.highlight {
+.connected li.highlight,
+.sortable li.highlight {
   background-color: #fee25f;
+}
+
+.disabled {
+  opacity: 0.3;
+}
+
+.forceHeight {
+  min-height: 3rem;
 }

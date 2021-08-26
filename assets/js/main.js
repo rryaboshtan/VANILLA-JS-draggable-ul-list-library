@@ -15,19 +15,7 @@ class Sortable {
       console.log("destroy.test = ", /destroy/.test(this.options));
       //executeOption()
       if (/destroy/.test(this.options)) {
-         const draggableLiItems = Array.from(this.items).filter((li) => li.matches(`[draggable='true']`));
-         draggableLiItems.forEach((item) => {
-            item.removeEventListener("dragstart", this.dragstartHandler);
-            item.addEventListener("dragend", (e) => item.classList.remove("sortable-dragging"));
-         });
-         console.log("DraggableLiItems = ", draggableLiItems);
-         delete this.placeholder.parentElement.data;
-         delete this.items;
-         this.placeholder.removeEventListener("dragover", this.dragoverHandler);
-         this.placeholder.removeEventListener("drop", this.dropHandler);
-
-         console.log("this=", this);
-
+         this.destroyList();
          return;
       } else if (/disable/.test(this.options)) {
          // console.log('disable ON')
@@ -96,6 +84,22 @@ class Sortable {
       console.log("draggable items = ", draggableLiItems);
 
       this.placeholder.parentElement.addEventListener("onsort", () => console.log("Custom Event Fired"));
+   }
+   destroyList() {
+      const draggableLiItems = Array.from(this.items).filter((li) => li.matches(`[draggable='true']`));
+      draggableLiItems.forEach((item) => {
+         item.removeEventListener("dragstart", this.dragstartHandler);
+         item.removeEventListener("dragend", (e) => item.classList.remove("sortable-dragging"));
+         item.setAttribute("draggable", "false");
+         // console.log('draggableItems = ', draggableLiItems)
+      });
+      console.log("DraggableLiItems = ", draggableLiItems);
+      delete this.placeholder.parentElement.data;
+      delete this.items;
+      this.placeholder.removeEventListener("dragover", this.dragoverHandler);
+      this.placeholder.removeEventListener("drop", this.dropHandler);
+
+      console.log("this=", this);
    }
 
    dragstartHandler = (e) => {
@@ -235,8 +239,8 @@ class Sortable {
 const sortable = new Sortable(".sortable", "connected");
 const connected = new Sortable(".connected");
 // sortable.addOption('enable')
-// sortable.addOption('destroy')
+sortable.addOption("destroy");
 // connected.addOption('deactive-elem :not(.other)')
-connected.addOption("deactive-elem .other");
+// connected.addOption('deactive-elem .other')
 
-connected.addOption("activate-elem .other");
+// connected.addOption('activate-elem .other')
