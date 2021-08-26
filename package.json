@@ -1,0 +1,20 @@
+{
+   "name": "html5draggable",
+   "version": "0.3.3",
+   "description": "Library for creating and manipulating draggable html ul lists",
+   "main": "index.js",
+   "scripts": {
+      "test": "echo \"Error: no test specified\" && exit 1"
+   },
+   "repository": {
+      "type": "git",
+      "url": "git+https://github.com/rryaboshtan/VANILLA-JS-draggable-ul-list-library.git"
+   },
+   "keywords": [],
+   "author": "",
+   "license": "ISC",
+   "bugs": {
+      "url": "https://github.com/rryaboshtan/VANILLA-JS-draggable-ul-list-library/issues"
+   },
+   "homepage": "https://github.com/rryaboshtan/VANILLA-JS-draggable-ul-list-library#readme"
+}
