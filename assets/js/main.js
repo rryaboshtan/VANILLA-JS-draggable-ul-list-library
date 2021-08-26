@@ -175,6 +175,19 @@ class Sortable {
 
    addOption(option) {
       option = option.toLowerCase();
+      const optionArgs = option.split(/\s\s*/);
+      console.log("optionArgs[0] = ", optionArgs[0]);
+      if (optionArgs[0] === "placeholder-class") {
+         this.placeholder.classList.remove(this.placeholderStyleClass);
+
+         this.placeholderStyleClass = optionArgs[1].substring(1, optionArgs[1].length);
+         console.log("optionArgs[1] = ", optionArgs[1].substring(1, optionArgs[1].length));
+
+         this.placeholder.classList.add(this.placeholderStyleClass);
+
+         return;
+      }
+
       let activateElemIndex = option.indexOf("activate-elem");
       if (activateElemIndex > -1) {
          // console.log('Split option', option.split(/\s\s*/))
@@ -244,6 +257,13 @@ const connected = new Sortable(".connected");
 // sortable.addOption('enable')
 // sortable.addOption('destroy')
 // connected.addOption('deactive-elem :not(.other)')
-connected.addOption("deactive-elem      .other");
+connected.addOption("deactive-elem .other");
 
-connected.addOption("activate-elem         .other");
+connected.addOption("activate-elem .other");
+sortable.addOption("placeholder-class .red");
+
+sortable.addOption("placeholder-class .yellow");
+sortable.addOption("placeholder-class .red");
+sortable.addOption("placeholder-class .yellow");
+
+// sortable.addOption('placeholder-class .yellow')
