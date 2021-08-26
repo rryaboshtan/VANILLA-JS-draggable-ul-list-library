@@ -1,7 +1,6 @@
 let dragging;
 class Sortable {
    constructor(sortableSelector, options) {
-      // this.dragging = false
       this.items = null;
       this.sortableSelector = sortableSelector;
       this.placeholder = null;
@@ -63,15 +62,15 @@ class Sortable {
       // console.log('children = ', document.querySelector(this.sortableSelector).children)
       // this.items = document.querySelector(this.sortableSelector).children
       this.items = document.querySelectorAll(`${this.sortableSelector} li`);
-      if (!this.items) {
-         console.error(
-            `Init: this.items can\'t be undefined or null, so the Elems <<${this.sortableSelector}>> can't be destroyed`
-         );
+      console.log("this.items = ", this.items);
+      if (!this.items.length) {
+         console.error(`Init: this.items.length must be more then 0`);
          return;
       }
 
       const plh = (this.placeholder = this.items[0]);
       if (!plh) {
+         // console.log('In placeholder')
          console.error("Init: this.placeholder can't be null or undefined");
          return;
       }
@@ -97,8 +96,8 @@ class Sortable {
 
       this.placeholder.parentElement.addEventListener("onsort", () => console.log("Custom Event Fired"));
    }
+
    destroySortable() {
-      // this.items = null
       if (!this.items) {
          console.error(
             `destroySortable: this.items can\'t be undefined or null, so the Elems <<${this.sortableSelector}>> can't be destroyed`
@@ -122,7 +121,6 @@ class Sortable {
    }
 
    deactivateElem() {
-      // this.items = null
       if (!this.items) {
          console.error(
             `deactivateElems: this.items can\'t be undefined or null, so the list of elements <<${this.deactiveElemClass}>> can't be deactivated`
@@ -162,6 +160,7 @@ class Sortable {
       dragging = e.target;
       // console.log('dragging=', dragging)
    };
+
    dropHandler = (e) => {
       // console.log('Drop dragging = ', dragging)
       // console.log(this.dragging)
