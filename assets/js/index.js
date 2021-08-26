@@ -281,7 +281,9 @@ class Sortable {
 const sortable = new Sortable('.sortable', 'connected');
 const connected = new Sortable('.connected');
 // // sortable.addOption('enable')
-// // sortable.addOption('destroy')
+sortable.addOption('destroy')
+// sortable.addOption('enable')
+
 connected.addOption('deactive-elem :not(.other)');
 // connected.addOption('deactive-elem')
 
