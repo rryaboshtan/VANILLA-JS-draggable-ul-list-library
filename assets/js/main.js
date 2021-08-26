@@ -57,7 +57,6 @@ class Sortable {
       }
 
       // console.log('after Destroy')
-
       // console.log('this.SortableSelector = ', this.sortableSelector)
       // console.log('children = ', document.querySelector(this.sortableSelector).children)
       // this.items = document.querySelector(this.sortableSelector).children
@@ -88,7 +87,14 @@ class Sortable {
 
       // console.log(this.placeholder.parentElement.data)
       const draggableLiItems = Array.from(this.items).filter((li) => li.matches(`[draggable='true']`));
+      if (!draggableLiItems) {
+         console.error(`Init: draggableLiItems.length can't be equal to 0`);
+         return;
+      }
       draggableLiItems.forEach((item) => {
+         item.addEventListener("mouseenter", () => (item.style.opacity = ".6"));
+         item.addEventListener("mouseleave", () => (item.style.opacity = "1"));
+
          item.addEventListener("dragstart", this.dragstartHandler);
          item.addEventListener("dragend", (e) => item.classList.remove("sortable-dragging"));
       });
@@ -328,7 +334,7 @@ class Sortable {
 // }
 
 const sortable = new Sortable(".sortable", "connected");
-// const connected = new Sortable('.connected')
+const connected = new Sortable(".connected");
 // // sortable.addOption('enable')
 // // sortable.addOption('destroy')
 // // connected.addOption('deactive-elem :not(.other)')

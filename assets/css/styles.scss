@@ -32,7 +32,8 @@ h2 {
 
 .connected,
 .sortable {
-    user-select: none;
+    // user-select: none;
+    background-color: #f6f6f6;
 
     margin: auto;
     &.list {
@@ -55,7 +56,6 @@ h2 {
         align-items: center;
         list-style: none;
         border: 1px solid #ccc;
-        background-color: #f6f6f6;
         font-family: "Tahoma";
         color: #1c94c4;
         margin: 5px;
@@ -63,7 +63,6 @@ h2 {
         height: 22px;
         &.sortable-placeholder {
             border: 3px dashed rgb(58, 35, 35);
-            background: none;
         }
         &[draggable="true"] {
             border-color: #000;
@@ -86,10 +85,12 @@ h2 {
 .forceHeight {
     min-height: 3rem;
 }
-// .unsel {
-//     user-select: none;
-//     -webkit-user-select: none;
-//     -moz-user-select: none;
-//     -ms-user-select: none;
 
-// }
+.yellow {
+    background-color: rgb(223, 202, 15);
+    // border-color: red !important;
+}
+.red {
+    background-color: rgb(223, 27, 27);
+}
+// .black
