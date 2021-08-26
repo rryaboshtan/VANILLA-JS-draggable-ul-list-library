@@ -105,7 +105,7 @@ class Sortable {
    }
 
    dragstartHandler = (e) => {
-      e.stopImmediatePropagation();
+      e.stopPropagation();
       e.dataTransfer.effectAllowed = "move";
       e.dataTransfer.setData("text/plain", "sdfdfsdfsdfd");
       e.target.classList.add("sortable-dragging");
@@ -177,6 +177,31 @@ class Sortable {
       option = option.toLowerCase();
       const optionArgs = option.split(/\s\s*/);
       console.log("optionArgs[0] = ", optionArgs[0]);
+      if (optionArgs[0] === "drag-image") {
+         console.log("Drag Image");
+         console.log("Drag Image name = ", optionArgs[1]);
+         const draggableLiItems = Array.from(this.items).filter((li) => li.matches(`[draggable='true']`));
+         draggableLiItems.forEach((item) => {
+            item.addEventListener("dragstart", (e) => {
+               const img = new Image();
+               img.src = optionArgs[1];
+               console.log("img.src = ", img.src);
+               e.dataTransfer.setDragImage(img, 20, 20);
+            });
+            // item.addEventListener('dragend', e => item.classList.remove('sortable-dragging'))
+         });
+         console.log("draggable items = ", draggableLiItems);
+
+         // this.placeholder.classList.remove(this.placeholderStyleClass)
+
+         // this.placeholderStyleClass = optionArgs[1].substring(1, optionArgs[1].length)
+         // console.log('optionArgs[1] = ', optionArgs[1].substring(1, optionArgs[1].length))
+
+         // this.placeholder.classList.add(this.placeholderStyleClass)
+
+         return;
+      }
+
       if (optionArgs[0] === "placeholder-class") {
          this.placeholder.classList.remove(this.placeholderStyleClass);
 
@@ -265,5 +290,6 @@ sortable.addOption("placeholder-class .red");
 sortable.addOption("placeholder-class .yellow");
 sortable.addOption("placeholder-class .red");
 sortable.addOption("placeholder-class .yellow");
+sortable.addOption("drag-image example.gif");
 
 // sortable.addOption('placeholder-class .yellow')
