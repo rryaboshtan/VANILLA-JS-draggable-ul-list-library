@@ -234,6 +234,9 @@ class Sortable {
          this.activateElem();
          return;
       }
+      // } else if (/serialize/.test(option)) {
+      //    this.activateElem();
+      //    return;
    }
 
    addOption(option) {
@@ -281,10 +284,10 @@ class Sortable {
 const sortable = new Sortable('.sortable', 'connected');
 const connected = new Sortable('.connected');
 // // sortable.addOption('enable')
-sortable.addOption('destroy')
+// sortable.addOption('destroy')
 // sortable.addOption('enable')
 
-connected.addOption('deactive-elem :not(.other)');
+// connected.addOption('deactive-elem :not(.other)');
 // connected.addOption('deactive-elem')
 
 // connected.addOption('activate-elem :not(.other)');
