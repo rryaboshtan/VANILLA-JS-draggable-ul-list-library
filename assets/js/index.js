@@ -13,6 +13,7 @@ class Sortable {
       this.placeholder = null;
       this.deactiveElemClass = null;
       this.placeholderStyleClass = null;
+      this.serialized = null;
 
       this.init();
    }
@@ -233,10 +234,12 @@ class Sortable {
       } else if (/activate-elem/.test(option)) {
          this.activateElem();
          return;
+      } else if (/serialize/.test(option)) {
+         console.log('Serialized ');
+         this.serialized = _serialize(document.querySelector(this.sortableSelector));
+         console.log('this.serialize = ', this.serialized);
+         return;
       }
-      // } else if (/serialize/.test(option)) {
-      //    this.activateElem();
-      //    return;
    }
 
    addOption(option) {
@@ -287,7 +290,9 @@ const connected = new Sortable('.connected');
 // sortable.addOption('destroy')
 // sortable.addOption('enable')
 
-// connected.addOption('deactive-elem :not(.other)');
+connected.addOption('deactive-elem :not(.other)');
+sortable.addOption('serialize');
+console.log(sortable.serialized);
 // connected.addOption('deactive-elem')
 
 // connected.addOption('activate-elem :not(.other)');

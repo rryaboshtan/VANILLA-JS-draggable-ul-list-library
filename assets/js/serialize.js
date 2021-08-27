@@ -9,8 +9,9 @@ export default function _serialize(
    }
 
    // const items = _filter(sortableContainer.children, )
+    console.log('sortableContainer =', sortableContainer)
    const items = sortableContainer.children;
-   const serializedItems = items.map((item, index) => {
+   const serializedItems = Array.from(items).map((item, index) => {
       return {
          parent: sortableContainer,
          node: item,
