@@ -1,6 +1,6 @@
 ## Used technologies
-    - HTML, SCSS, Bootstrap
-    - Responsive markup
+    - Vanilla JS
+    - Drag & Drop
 
 ## [Demo version](https://rryaboshtan.github.io/FashionDemo2/)
 
