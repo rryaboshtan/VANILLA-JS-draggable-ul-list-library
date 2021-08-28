@@ -206,8 +206,12 @@ class Sortable {
       console.log('drag over Function');
    };
 
-   executeOption(option) {
-      switch (option) {
+   addOption(option) {
+      option = option.toLowerCase();
+      const optionArgs = option.split(/\s\s*/);
+      console.log('optionArgs[0] = ', optionArgs[0]);
+
+      switch (optionArgs[0]) {
          case 'destroy':
             try {
                this.destroySortable();
@@ -228,6 +232,7 @@ class Sortable {
             this.placeholder.addEventListener('drop', this.dropHandler);
             break;
          case 'deactive-elem':
+            this.deactiveElemClass = option.split(/\s\s*/)[1];
             try {
                this.deactivateElem();
             } catch (err) {
@@ -246,17 +251,6 @@ class Sortable {
             this.serialized = _serialize(document.querySelector(this.sortableSelector));
             console.log('this.serialize = ', this.serialized);
             break;
-         default:
-            throw new Error('executeOption: user inputs unknown option')
-      }
-   }
-
-   addOption(option) {
-      option = option.toLowerCase();
-      const optionArgs = option.split(/\s\s*/);
-      console.log('optionArgs[0] = ', optionArgs[0]);
-
-      switch (optionArgs[0]) {
          case 'drag-image':
             console.log('Drag Image');
             console.log('Drag Image name = ', optionArgs[1]);
@@ -281,15 +275,11 @@ class Sortable {
             this.placeholder.classList.add(this.placeholderStyleClass);
 
             break;
-         case 'deactive-elem':
-            this.deactiveElemClass = option.split(/\s\s*/)[1];
+         default:
+            throw new Error('executeOption: user inputs unknown option');
       }
 
       console.log('this.deactiveElemClass = ', this.deactiveElemClass);
-      // console.log(this.options)
-
-      this.executeOption(optionArgs[0]);
-      // console.log(this)
    }
 }
 
