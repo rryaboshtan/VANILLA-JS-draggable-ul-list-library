@@ -251,9 +251,10 @@ class Sortable {
             console.log('this.containerSerializer = ', this.containerSerializer);
 
             // this.containerSerializer = new Function(optionArgs[1]);
-            this.containerSerializer = userObj[optionArgs[1]];
+            // this.containerSerializer = userObj[optionArgs[1]];
             // this.containerSerializer = self[optionArgs[1]];
             // this.containerSerializer = new Function(optionArgs[1]);
+            this.containerSerializer = window[optionArgs[1]];
 
             console.log('this.containerSerializer = ', this.containerSerializer);
             break;
@@ -317,10 +318,16 @@ const userObj = {
    },
 };
 sortable.userSerializer = () => {
-      return {
-         length: 20,
-      };
-   },
+   return {
+      length: 20,
+   };
+};
+
+window.userSerializer = () => {
+   return {
+      length: 20,
+   };
+};
 
 console.log('this = ', self);
 sortable.addOption('containerSerializer userSerializer');
