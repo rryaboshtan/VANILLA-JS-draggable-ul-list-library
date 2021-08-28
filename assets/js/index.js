@@ -252,20 +252,7 @@ class Sortable {
             console.log('this.serialize = ', this.serialized);
             break;
          case 'drag-image':
-            console.log('Drag Image');
-            console.log('Drag Image name = ', optionArgs[1]);
-            const draggableLiItems = Array.from(this.items).filter((li) => li.matches(`[draggable='true']`));
-            draggableLiItems.forEach((item) => {
-               item.addEventListener('dragstart', (e) => {
-                  const img = new Image();
-                  img.src = optionArgs[1];
-                  console.log('img.src = ', img.src);
-                  e.dataTransfer.setDragImage(img, 20, 20);
-               });
-               // item.addEventListener('dragend', e => item.classList.remove('sortable-dragging'))
-            });
-            console.log('draggable items = ', draggableLiItems);
-            // console.log('optionArgs[1] = ', optionArgs[1].substring(1, optionArgs[1].length))
+            this.dragImage();
             break;
          case 'placeholder-class':
             this.placeholder.classList.remove(this.placeholderStyleClass);
@@ -280,6 +267,25 @@ class Sortable {
       }
 
       console.log('this.deactiveElemClass = ', this.deactiveElemClass);
+   }
+   dragImage() {
+      console.log('Drag Image');
+      console.log('Drag Image name = ', optionArgs[1]);
+      const draggableLiItems = Array.from(this.items).filter((li) => li.matches(`[draggable='true']`));
+      if (!draggableLiItems) {
+         throw new Error(`Init: draggableLiItems.length can't be equal to 0`);
+      }
+      draggableLiItems.forEach((item) => {
+         item.addEventListener('dragstart', (e) => {
+            const img = new Image();
+            img.src = optionArgs[1];
+            console.log('img.src = ', img.src);
+            e.dataTransfer.setDragImage(img, 20, 20);
+         });
+         // item.addEventListener('dragend', e => item.classList.remove('sortable-dragging'))
+      });
+      console.log('draggable items = ', draggableLiItems);
+      // console.log('optionArgs[1] = ', optionArgs[1].substring(1, optionArgs[1].length))
    }
 }
 

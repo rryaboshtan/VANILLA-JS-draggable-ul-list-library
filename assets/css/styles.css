@@ -7,6 +7,17 @@
   padding: 0;
 }
 
+.container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-column-gap: 4rem;
+          column-gap: 4rem;
+}
+
 header,
 section {
   display: block;

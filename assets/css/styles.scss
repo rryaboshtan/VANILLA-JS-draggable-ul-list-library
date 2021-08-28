@@ -5,6 +5,11 @@
     margin: 0;
     padding: 0;
 }
+.container {
+    display: flex;
+    justify-content: center;
+    column-gap: 4rem;
+}
 header,
 section {
     display: block;
