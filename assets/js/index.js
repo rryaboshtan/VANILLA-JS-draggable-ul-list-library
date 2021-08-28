@@ -1,44 +1,7 @@
 // import _debounce from './debounce.js';
 // import _throttle from './throttle.js';
 // import _filter from './filter.js';
-// import _serialize from './serialize.js';
-// export default
-   function _serialize(
-   sortableContainer,
-   customContainerSerializer = (serializedContainer) => serializedContainer,
-   customItemSerializer = (serializedItem, sortableContainer) => serializedItem
-) {
-   if (typeof customItemSerializer !== 'function' || typeof customContainerSerializer !== 'function') {
-      throw new Error('Serialize: You need to provide a valid serializer for items and the container');
-   }
-
-   // const items = _filter(sortableContainer.children, )
-   console.log('CustomContainerSerializer = ', customContainerSerializer);
-   console.log('sortableContainer =', sortableContainer);
-   const items = sortableContainer.children;
-   if (!items.length) {
-      throw new Error(`_serialize: Ul container children list length must be more than 0`);
-   }
-
-   const serializedItems = Array.from(items).map((item, index) => {
-      return {
-         parent: sortableContainer,
-         node: item,
-         html: item.innerHTML || '',
-         index: index,
-      };
-   });
-   const container = {
-      node: sortableContainer,
-      itemCount: serializedItems.length,
-   };
-
-   return {
-      container: customContainerSerializer(container),
-      items: serializedItems.map((item) => customItemSerializer(item, sortableContainer)),
-   };
-}
-
+import _serialize from './serialize.js';
 
 let dragging;
 //========================================main class============================================
@@ -287,7 +250,11 @@ class Sortable {
          case 'containerSerializer':
             console.log('this.containerSerializer = ', this.containerSerializer);
 
-            this.containerSerializer = window[optionArgs[1]];
+            // this.containerSerializer = new Function(optionArgs[1]);
+            this.containerSerializer = userObj[optionArgs[1]];
+            // this.containerSerializer = self[optionArgs[1]];
+            // this.containerSerializer = new Function(optionArgs[1]);
+
             console.log('this.containerSerializer = ', this.containerSerializer);
             break;
          case 'serialize':
@@ -342,18 +309,25 @@ const connected = new Sortable('.connected');
 // sortable.addOption('enable')
 
 connected.addOption('deactive-elem :not(.other)');
-function userSerializer() {
-   return {
-      length: 20,
-   };
-} 
+const userObj = {
+   userSerializer() {
+      return {
+         length: 20,
+      };
+   },
+};
+sortable.userSerializer = () => {
+      return {
+         length: 20,
+      };
+   },
+
+console.log('this = ', self);
 sortable.addOption('containerSerializer userSerializer');
 
 sortable.addOption('serialize');
 console.log(sortable.serialized);
 // sortable.addOption('asdfdsdfsdf');
-
-
 
 // connected.addOption('deactive-elem')
 
