@@ -30,15 +30,13 @@ class Sortable {
       this.items = document.querySelectorAll(`${this.sortableSelector} li`);
       console.log('this.items = ', this.items);
       if (!this.items.length) {
-         console.error(`Init: this.items.length must be more then 0`);
-         return;
+         throw new Error(`Init: this.items.length must be more then 0`);
       }
 
       const plh = (this.placeholder = this.items[0]);
       if (!plh) {
          // console.log('In placeholder')
-         console.error("Init: this.placeholder can't be null or undefined");
-         return;
+         throw new Error("Init: this.placeholder can't be null or undefined");
       }
 
       console.log('this.placeholder = ', this.placeholder);
@@ -56,8 +54,7 @@ class Sortable {
       // console.log(this.placeholder.parentElement.data)
       const draggableLiItems = Array.from(this.items).filter((li) => li.matches(`[draggable='true']`));
       if (!draggableLiItems) {
-         console.error(`Init: draggableLiItems.length can't be equal to 0`);
-         return;
+         throw new Error(`Init: draggableLiItems.length can't be equal to 0`);
       }
       draggableLiItems.forEach((item) => {
          item.addEventListener('mouseenter', () => {
@@ -76,10 +73,9 @@ class Sortable {
 
    destroySortable() {
       if (!this.items) {
-         console.error(
-            `destroySortable: this.items can\'t be undefined or null, so the Elems <<${this.sortableSelector}>> can't be destroyed`
+         throw new Error(
+            `destroySortable: this.items can\'t be undefined or null, so the List <<${this.sortableSelector}>> is already destroyed`
          );
-         return;
       }
       const draggableLiItems = Array.from(this.items).filter((li) => li.matches(`[draggable='true']`));
       draggableLiItems.forEach((item) => {
@@ -99,10 +95,9 @@ class Sortable {
 
    deactivateElem() {
       if (!this.items) {
-         console.error(
+         throw new Error(
             `deactivateElems: this.items can\'t be undefined or null, so the list of elements <<${this.deactiveElemClass}>> can't be deactivated`
          );
-         return;
       }
       console.log('this.items = ', this.items);
       console.log('this.deactiveElemClass = ', this.deactiveElemClass);
@@ -110,10 +105,9 @@ class Sortable {
       const deactiveLiItems = Array.from(this.items).filter((li) => li.matches(this.deactiveElemClass));
       console.log('deactiveLiItems', deactiveLiItems);
       if (!deactiveLiItems || deactiveLiItems.length === 0) {
-         console.error(
+         throw new Error(
             `deactivateElems of class <<${this.deactiveElemClass}>> are absent, so that it's impossible to deactivate them`
          );
-         return;
       }
       console.log('deactiveElems = ', deactiveLiItems);
       deactiveLiItems.forEach((item) => {
@@ -126,11 +120,15 @@ class Sortable {
       });
    }
    activateElem() {
+      this.items = null;
       if (!this.items) {
-         console.error(
+         // console.error(
+         //    `activateElems: this.items can\'t be undefined or null, so the list of elements <<${this.deactiveElemClass}>> can't be activated`
+         // );
+         // return;
+         throw new Error(
             `activateElems: this.items can\'t be undefined or null, so the list of elements <<${this.deactiveElemClass}>> can't be activated`
          );
-         return;
       }
       const deactiveLiItems = Array.from(this.items).filter((li) => li.matches(this.deactiveElemClass));
       // console.log('deactiveElems = ', deactiveLiItems)
@@ -168,9 +166,9 @@ class Sortable {
       //     return
       // }
       // console.log('this.placeholder = ', this.placeholder)
+      this.placeholder = null;
       if (!this.placeholder) {
-         console.error("dropHandler: this.placeholder can't be null or undefined");
-         return;
+         throw new Error("dropHandler: this.placeholder can't be null or undefined");
       }
       // console.log('dragging = ', dragging)
 
@@ -203,8 +201,7 @@ class Sortable {
    dragoverHandler = (e) => {
       // this.placeholder = null
       if (!this.placeholder) {
-         console.error("dragoverHandler: this.placeholder can't be null or undefined");
-         return;
+         throw new Error("dragoverHandler: this.placeholder can't be null or undefined");
       }
       e.preventDefault();
       e.dataTransfer.dropEffect = 'move';
@@ -213,7 +210,11 @@ class Sortable {
 
    executeOption(option) {
       if (/destroy/.test(option)) {
-         this.destroySortable();
+         try {
+            this.destroySortable();
+         } catch (err) {
+            console.error(err.message);
+         }
          return;
       } else if (/disable/.test(option)) {
          // console.log('disable ON')
@@ -228,11 +229,19 @@ class Sortable {
          this.placeholder.addEventListener('drop', this.dropHandler);
          return;
       } else if (/deactive-elem/.test(option)) {
-         this.deactivateElem();
+         try {
+            this.deactivateElem();
+         } catch (err) {
+            console.error(err.message);
+         }
          return;
          // console.log('DraggableLiItems = ', draggableLiItems)
       } else if (/activate-elem/.test(option)) {
-         this.activateElem();
+         try {
+            this.activateElem();
+         } catch (err) {
+            console.error(err.message);
+         }
          return;
       } else if (/serialize/.test(option)) {
          console.log('Serialized ');
@@ -295,7 +304,7 @@ sortable.addOption('serialize');
 console.log(sortable.serialized);
 // connected.addOption('deactive-elem')
 
-// connected.addOption('activate-elem :not(.other)');
+connected.addOption('activate-elem :not(.other)');
 // sortable.addOption('placeholder-class .red')
 
 // sortable.addOption('placeholder-class .yellow')
