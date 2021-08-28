@@ -120,7 +120,7 @@ class Sortable {
       });
    }
    activateElem() {
-      this.items = null;
+      // this.items = null;
       if (!this.items) {
          // console.error(
          //    `activateElems: this.items can\'t be undefined or null, so the list of elements <<${this.deactiveElemClass}>> can't be activated`
@@ -166,7 +166,7 @@ class Sortable {
       //     return
       // }
       // console.log('this.placeholder = ', this.placeholder)
-      this.placeholder = null;
+      // this.placeholder = null;
       if (!this.placeholder) {
          throw new Error("dropHandler: this.placeholder can't be null or undefined");
       }
@@ -209,45 +209,47 @@ class Sortable {
    };
 
    executeOption(option) {
-      if (/destroy/.test(option)) {
-         try {
-            this.destroySortable();
-         } catch (err) {
-            console.error(err.message);
-         }
-         return;
-      } else if (/disable/.test(option)) {
-         // console.log('disable ON')
-         // console.log('option = ', option)
-         this.placeholder.removeEventListener('dragover', this.dragoverHandler);
-         this.placeholder.removeEventListener('drop', this.dropHandler);
-         return;
-      } else if (/enable/.test(option)) {
-         // console.log('enable ON')
-         // console.log('option = ', option)
-         this.placeholder.addEventListener('dragover', this.dragoverHandler);
-         this.placeholder.addEventListener('drop', this.dropHandler);
-         return;
-      } else if (/deactive-elem/.test(option)) {
-         try {
-            this.deactivateElem();
-         } catch (err) {
-            console.error(err.message);
-         }
-         return;
-         // console.log('DraggableLiItems = ', draggableLiItems)
-      } else if (/activate-elem/.test(option)) {
-         try {
-            this.activateElem();
-         } catch (err) {
-            console.error(err.message);
-         }
-         return;
-      } else if (/serialize/.test(option)) {
-         console.log('Serialized ');
-         this.serialized = _serialize(document.querySelector(this.sortableSelector));
-         console.log('this.serialize = ', this.serialized);
-         return;
+      switch (option) {
+         case 'destroy':
+            try {
+               this.destroySortable();
+            } catch (err) {
+               console.error(err.message);
+            }
+            break;
+         case 'disable':
+            // console.log('disable ON')
+            // console.log('option = ', option)
+            this.placeholder.removeEventListener('dragover', this.dragoverHandler);
+            this.placeholder.removeEventListener('drop', this.dropHandler);
+            break;
+         case 'enable':
+            // console.log('enable ON')
+            // console.log('option = ', option)
+            this.placeholder.addEventListener('dragover', this.dragoverHandler);
+            this.placeholder.addEventListener('drop', this.dropHandler);
+            break;
+         case 'deactive-elem':
+            try {
+               this.deactivateElem();
+            } catch (err) {
+               console.error(err.message);
+            }
+            break;
+         case 'activate-elem':
+            try {
+               this.activateElem();
+            } catch (err) {
+               console.error(err.message);
+            }
+            break;
+         case 'serialize':
+            console.log('Serialized ');
+            this.serialized = _serialize(document.querySelector(this.sortableSelector));
+            console.log('this.serialize = ', this.serialized);
+            break;
+         default:
+            throw new Error('executeOption: user inputs unknown option')
       }
    }
 
@@ -288,7 +290,7 @@ class Sortable {
       console.log('this.deactiveElemClass = ', this.deactiveElemClass);
       // console.log(this.options)
 
-      this.executeOption(option);
+      this.executeOption(optionArgs[0]);
       // console.log(this)
    }
 }
@@ -304,7 +306,7 @@ sortable.addOption('serialize');
 console.log(sortable.serialized);
 // connected.addOption('deactive-elem')
 
-connected.addOption('activate-elem :not(.other)');
+// connected.addOption('activate-elem :not(.other)');
 // sortable.addOption('placeholder-class .red')
 
 // sortable.addOption('placeholder-class .yellow')
