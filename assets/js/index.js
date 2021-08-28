@@ -21,16 +21,14 @@ class Sortable {
    init() {
       console.log('options = ', '----', this.options);
       console.log('destroy.test = ', /destroy/.test(this.options));
-      //executeOption()
 
       // console.log('after Destroy')
       // console.log('this.SortableSelector = ', this.sortableSelector)
       // console.log('children = ', document.querySelector(this.sortableSelector).children)
-      // this.items = document.querySelector(this.sortableSelector).children
       this.items = document.querySelectorAll(`${this.sortableSelector} li`);
       console.log('this.items = ', this.items);
       if (!this.items.length) {
-         throw new Error(`Init: this.items.length must be more then 0`);
+         throw new Error(`Init: this.items.length must be more than 0`);
       }
 
       const plh = (this.placeholder = this.items[0]);
@@ -304,6 +302,8 @@ const connected = new Sortable('.connected');
 connected.addOption('deactive-elem :not(.other)');
 sortable.addOption('serialize');
 console.log(sortable.serialized);
+// sortable.addOption('asdfdsdfsdf');
+
 // connected.addOption('deactive-elem')
 
 // connected.addOption('activate-elem :not(.other)');

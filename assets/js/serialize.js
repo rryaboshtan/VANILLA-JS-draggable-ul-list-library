@@ -4,13 +4,16 @@ export default function _serialize(
    customContainerSerializer = (serializedContainer) => serializedContainer
 ) {
    if (typeof customItemSerializer !== 'function' || typeof customContainerSerializer !== 'function') {
-      console.error('Serialize: You need to provide a valid serializer for items and the container');
-      return;
+      throw new Error('Serialize: You need to provide a valid serializer for items and the container');
    }
 
    // const items = _filter(sortableContainer.children, )
-    console.log('sortableContainer =', sortableContainer)
+   console.log('sortableContainer =', sortableContainer);
    const items = sortableContainer.children;
+   if (!items.length) {
+      throw new Error(`_serialize: Ul container children list length must be more than 0`);
+   }
+
    const serializedItems = Array.from(items).map((item, index) => {
       return {
          parent: sortableContainer,
