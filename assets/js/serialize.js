@@ -10,8 +10,8 @@ export default function _serialize(
    // const items = _filter(sortableContainer.children, )
    console.log('CustomContainerSerializer = ', customContainerSerializer);
    console.log('sortableContainer =', sortableContainer);
-   let items = sortableContainer.children;
-   items = null;
+   const items = sortableContainer.children;
+   // items = null;
    if (!items || !items.length) {
       throw new Error(`_serialize: Ul container children list length must be more than 0`);
    }

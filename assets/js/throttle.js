@@ -13,7 +13,7 @@ export default function _throttle(fn, delay = 250) {
       const now = Date.now();
       //    console.log("Date.now = ", now, "lastEventTimeStamp = ", lastEventTimeStamp);
       //    console.log("now - lastEventTimeStamp = ", now - lastEventTimeStamp);
-      if (lastEventTimeStamp === null || now - lastEventTimeStamp >= delay) {
+      if (lastEventTimeStamp === null || now - lastEventTimeStamp >= delay+2) {
          lastEventTimeStamp = now;
          fn.apply(this, args);
       }

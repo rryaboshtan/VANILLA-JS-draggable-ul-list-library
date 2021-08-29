@@ -1,5 +1,5 @@
 // import _debounce from './debounce.js';
-// import _throttle from './throttle.js';
+import _throttle from './throttle.js';
 // import _filter from './filter.js';
 import _serialize from './serialize.js';
 
@@ -21,6 +21,12 @@ class Sortable {
    }
 
    init() {
+      // const f = _throttle(console.log, 500);
+      // f("Throttle", 1);
+      // f(2);
+      // setTimeout(() => f(3), 100);
+      // setTimeout(() => f(4), 500);
+      // setTimeout(() => f(5), 900);
       console.log('options = ', '----', this.options);
       console.log('destroy.test = ', /destroy/.test(this.options));
 
