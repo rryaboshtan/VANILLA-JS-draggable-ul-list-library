@@ -1,6 +1,3 @@
-// import _debounce from './debounce.js';
-import _throttle from './throttle.js';
-// import _filter from './filter.js';
 import _serialize from './serialize.js';
 
 let dragging;
@@ -13,52 +10,32 @@ class Sortable {
       this.placeholder = null;
       this.deactiveElemClass = null;
       this.placeholderStyleClass = null;
-      this.serialized = null;
+      this._serialized = null;
       this.containerSerializer = (serializedContainer) => serializedContainer;
       this.itemSerializer = (serializedItem, sortableContainer) => serializedItem;
 
       this.init();
    }
+   get Serialized() {
+      return this._serialized
+   }
 
    init() {
-      // const f = _throttle(console.log, 500);
-      // f("Throttle", 1);
-      // f(2);
-      // setTimeout(() => f(3), 100);
-      // setTimeout(() => f(4), 500);
-      // setTimeout(() => f(5), 900);
-      console.log('options = ', '----', this.options);
-      console.log('destroy.test = ', /destroy/.test(this.options));
-
-      // console.log('after Destroy')
-      // console.log('this.SortableSelector = ', this.sortableSelector)
-      // console.log('children = ', document.querySelector(this.sortableSelector).children)
       this.items = document.querySelectorAll(`${this.sortableSelector} li`);
-      console.log('this.items = ', this.items);
-      // this.items = null;
       if (!this.items || !this.items.length) {
          throw new Error(`Init: this.items.length must be more than 0`);
       }
 
       const plh = (this.placeholder = this.items[0]);
       if (!plh) {
-         // console.log('In placeholder')
          throw new Error("Init: this.placeholder can't be null or undefined");
       }
 
-      console.log('this.placeholder = ', this.placeholder);
-      console.log('this.items = ', this.items);
-
       plh.classList.add('sortable-placeholder');
       plh.parentElement.style.userSelect = 'none';
-      //   this.dragoverHandler = (_debounce(this.dragoverHandler, 200))(e);
       plh.addEventListener('dragover', this.dragoverHandler);
       plh.addEventListener('drop', this.dropHandler);
-      // if (/connected/.test(this.options)) {
-      //     this.placeholder.parentElement.data = { connectWith: 'connected' }
-      // }
 
-      // console.log(this.placeholder.parentElement.data)
       const draggableLiItems = Array.from(this.items).filter((li) => li.matches(`[draggable='true']`));
       if (!draggableLiItems || !draggableLiItems.length) {
          throw new Error(`Init: draggableLiItems.length can't be equal to 0`);
@@ -73,7 +50,6 @@ class Sortable {
          item.addEventListener('dragstart', this.dragstartHandler);
          item.addEventListener('dragend', (e) => item.classList.remove('sortable-dragging'));
       });
-      console.log('draggable items = ', draggableLiItems);
 
       this.placeholder.parentElement.addEventListener('onsort', () => console.log('Custom Event Fired'));
    }
@@ -89,15 +65,12 @@ class Sortable {
          item.removeEventListener('dragstart', this.dragstartHandler);
          item.removeEventListener('dragend', (e) => item.classList.remove('sortable-dragging'));
          item.setAttribute('draggable', 'false');
-         // console.log('draggableItems = ', draggableLiItems)
       });
-      console.log('DraggableLiItems = ', draggableLiItems);
+
       delete this.placeholder.parentElement.data;
       delete this.items;
       this.placeholder.removeEventListener('dragover', this.dragoverHandler);
       this.placeholder.removeEventListener('drop', this.dropHandler);
-
-      console.log('this=', this);
    }
 
    deactivateElem() {
@@ -106,48 +79,33 @@ class Sortable {
             `deactivateElems: this.items can\'t be undefined or null, so the list of elements <<${this.deactiveElemClass}>> can't be deactivated`
          );
       }
-      console.log('this.items = ', this.items);
-      console.log('this.deactiveElemClass = ', this.deactiveElemClass);
-      console.log('deactiveElemClass', this.deactiveElemClass);
       const deactiveLiItems = Array.from(this.items).filter((li) => li.matches(this.deactiveElemClass));
-      console.log('deactiveLiItems', deactiveLiItems);
       if (!deactiveLiItems || deactiveLiItems.length === 0) {
          throw new Error(
             `deactivateElems of class <<${this.deactiveElemClass}>> are absent, so that it's impossible to deactivate them`
          );
       }
-      console.log('deactiveElems = ', deactiveLiItems);
+
       deactiveLiItems.forEach((item) => {
          item.classList.add('disabled');
-         console.log('GetAttribute Draggable = ', item.getAttribute('draggable'));
          item.setAttribute('draggable', 'false');
-         console.log('GetAttribute Draggable = ', item.getAttribute('draggable'));
-         // item.removeEventListener('dragstart', this.dragstartHandler)
-         // item.removeEventListener('dragend', e => item.classList.remove('sortable-dragging'))
       });
    }
    activateElem() {
-      // this.items = null;
       if (!this.items) {
-         // console.error(
-         //    `activateElems: this.items can\'t be undefined or null, so the list of elements <<${this.deactiveElemClass}>> can't be activated`
-         // );
-         // return;
          throw new Error(
             `activateElems: this.items can\'t be undefined or null, so the list of elements <<${this.deactiveElemClass}>> can't be activated`
          );
       }
       const deactiveLiItems = Array.from(this.items).filter((li) => li.matches(this.deactiveElemClass));
-      // console.log('deactiveElems = ', deactiveLiItems)
+
       if (!deactiveLiItems || deactiveLiItems.length === 0) {
-         console.error(
+         throw new Error(
             `ActivateElem: activateElems of class <<${this.deactiveElemClass}>> are absent, so that it's impossible to activate them`
          );
-         return;
       }
       deactiveLiItems.forEach((item) => {
          item.classList.remove('disabled');
-         // console.log('GetAttribute Draggable = ', item.getAttribute('draggable'))
          item.setAttribute('draggable', 'true');
       });
 
@@ -160,30 +118,17 @@ class Sortable {
       e.dataTransfer.setData('text/plain', 'sdfdfsdfsdfd');
       e.target.classList.add('sortable-dragging');
 
-      //Remember draggable content globally
-      // this.dragging = e.target
       dragging = e.target;
-      // console.log('dragging=', dragging)
    };
 
    dropHandler = (e) => {
-      // console.log('Drop dragging = ', dragging)
-      // console.log(this.dragging)
-      // if (!this.dragging) {
-      //     return
-      // }
-      // console.log('this.placeholder = ', this.placeholder)
-      // this.placeholder = null;
       if (!this.placeholder) {
          throw new Error("dropHandler: this.placeholder can't be null or undefined");
       }
-      // console.log('dragging = ', dragging)
 
       e.stopImmediatePropagation();
       let plh = this.placeholder;
 
-      // if (this.isBefore(this.dragging, this.placeholder)) {
-      // console.log('dragging = ', dragging)
       plh.parentElement.insertBefore(dragging, plh);
       console.log(plh.parentElement.children);
       plh.removeEventListener('dragover', this.dragoverHandler);
@@ -194,31 +139,22 @@ class Sortable {
       plh.addEventListener('dragover', this.dragoverHandler);
       plh.addEventListener('drop', this.dropHandler);
       plh.classList.add('sortable-placeholder');
-      // }
-      // else
-      //     plh.parentElement.insertBefore(this.dragging, plh.nextSibling)
 
-      // this.dragging = null
-      // console.log(e.dataTransfer.getData('text/plain'))
       this.placeholder.parentElement.dispatchEvent(new CustomEvent('onsort'));
 
       e.preventDefault();
    };
 
    dragoverHandler = (e) => {
-      // this.placeholder = null
       if (!this.placeholder) {
          throw new Error("dragoverHandler: this.placeholder can't be null or undefined");
       }
       e.preventDefault();
       e.dataTransfer.dropEffect = 'move';
-      console.log('drag over Function');
    };
 
    addOption(option) {
-      // option = option.toLowerCase();
       const optionArgs = option.split(/\s\s*/);
-      console.log('optionArgs[0] = ', optionArgs[0]);
 
       switch (optionArgs[0]) {
          case 'destroy':
@@ -229,14 +165,10 @@ class Sortable {
             }
             break;
          case 'disable':
-            // console.log('disable ON')
-            // console.log('option = ', option)
             this.placeholder.removeEventListener('dragover', this.dragoverHandler);
             this.placeholder.removeEventListener('drop', this.dropHandler);
             break;
          case 'enable':
-            // console.log('enable ON')
-            // console.log('option = ', option)
             this.placeholder.addEventListener('dragover', this.dragoverHandler);
             this.placeholder.addEventListener('drop', this.dropHandler);
             break;
@@ -256,27 +188,17 @@ class Sortable {
             }
             break;
          case 'containerSerializer':
-            console.log('this.containerSerializer = ', this.containerSerializer);
-
-            // this.containerSerializer = new Function(optionArgs[1]);
-            // this.containerSerializer = userObj[optionArgs[1]];
-            // this.containerSerializer = self[optionArgs[1]];
-            // this.containerSerializer = new Function(optionArgs[1]);
             this.userContSerializer = window[optionArgs[1]];
-
-            console.log('this.containerSerializer = ', this.containerSerializer);
             break;
          case 'itemSerializer':
             this.userItemSerializer = window[optionArgs[1]];
-
-            console.log('this.userItemSerializer = ', this.userItemSerializer);
             break;
          case 'serialize':
-            console.log('Serialized ');
-            // this.serialized = _serialize(document.querySelector(this.sortableSelector));
-            this.serialized = _serialize(document.querySelector(this.sortableSelector), this.userContSerializer, this.userItemSerializer);
-
-            console.log('this.serialize = ', this.serialized);
+            this.serialized = _serialize(
+               document.querySelector(this.sortableSelector),
+               this.userContSerializer,
+               this.userItemSerializer
+            );
             break;
          case 'drag-image':
             this.dragImage();
@@ -285,19 +207,14 @@ class Sortable {
             this.placeholder.classList.remove(this.placeholderStyleClass);
 
             this.placeholderStyleClass = optionArgs[1].substring(1, optionArgs[1].length);
-            console.log('optionArgs[1] = ', optionArgs[1].substring(1, optionArgs[1].length));
             this.placeholder.classList.add(this.placeholderStyleClass);
 
             break;
          default:
             throw new Error('executeOption: user inputs unknown option');
       }
-
-      console.log('this.deactiveElemClass = ', this.deactiveElemClass);
    }
    dragImage() {
-      console.log('Drag Image');
-      console.log('Drag Image name = ', optionArgs[1]);
       const draggableLiItems = Array.from(this.items).filter((li) => li.matches(`[draggable='true']`));
       if (!draggableLiItems) {
          throw new Error(`Init: draggableLiItems.length can't be equal to 0`);
@@ -306,35 +223,16 @@ class Sortable {
          item.addEventListener('dragstart', (e) => {
             const img = new Image();
             img.src = optionArgs[1];
-            console.log('img.src = ', img.src);
             e.dataTransfer.setDragImage(img, 20, 20);
          });
-         // item.addEventListener('dragend', e => item.classList.remove('sortable-dragging'))
       });
-      console.log('draggable items = ', draggableLiItems);
-      // console.log('optionArgs[1] = ', optionArgs[1].substring(1, optionArgs[1].length))
    }
 }
 
 const sortable = new Sortable('.sortable', 'connected');
 const connected = new Sortable('.connected');
-// // sortable.addOption('enable')
-// sortable.addOption('destroy')
-// sortable.addOption('enable')
 
 connected.addOption('deactive-elem :not(.other)');
-const userObj = {
-   userSerializer() {
-      return {
-         length: 20,
-      };
-   },
-};
-sortable.userSerializer = () => {
-   return {
-      length: 20,
-   };
-};
 
 window.userContSerializer = () => {
    return {
@@ -347,15 +245,12 @@ window.userItemSerializer = (item) => {
    return item;
 };
 
-console.log('this = ', self);
 sortable.addOption('containerSerializer userContSerializer');
 sortable.addOption('itemSerializer userItemSerializer');
 
 sortable.addOption('serialize');
-console.log(sortable.serialized);
+console.log(sortable._serialized);
 // sortable.addOption('asdfdsdfsdf');
-
-// connected.addOption('deactive-elem')
 
 // connected.addOption('activate-elem :not(.other)');
 // sortable.addOption('placeholder-class .red')
@@ -364,7 +259,3 @@ console.log(sortable.serialized);
 // sortable.addOption('placeholder-class .red')
 // sortable.addOption('placeholder-class .yellow')
 // sortable.addOption('drag-image example.gif')
-
-// sortable.addOption('destroy')
-
-// sortable.addOption('placeholder-class .yellow')
