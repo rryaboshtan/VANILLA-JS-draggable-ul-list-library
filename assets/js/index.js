@@ -14,7 +14,8 @@ class Sortable {
       this.deactiveElemClass = null;
       this.placeholderStyleClass = null;
       this.serialized = null;
-      this.containerSerializer = null;
+      this.containerSerializer = (serializedContainer) => serializedContainer;
+      this.itemSerializer = (serializedItem, sortableContainer) => serializedItem;
 
       this.init();
    }
@@ -28,7 +29,8 @@ class Sortable {
       // console.log('children = ', document.querySelector(this.sortableSelector).children)
       this.items = document.querySelectorAll(`${this.sortableSelector} li`);
       console.log('this.items = ', this.items);
-      if (!this.items.length) {
+      // this.items = null;
+      if (!this.items || !this.items.length) {
          throw new Error(`Init: this.items.length must be more than 0`);
       }
 
@@ -52,7 +54,7 @@ class Sortable {
 
       // console.log(this.placeholder.parentElement.data)
       const draggableLiItems = Array.from(this.items).filter((li) => li.matches(`[draggable='true']`));
-      if (!draggableLiItems) {
+      if (!draggableLiItems || !draggableLiItems.length) {
          throw new Error(`Init: draggableLiItems.length can't be equal to 0`);
       }
       draggableLiItems.forEach((item) => {
@@ -254,14 +256,19 @@ class Sortable {
             // this.containerSerializer = userObj[optionArgs[1]];
             // this.containerSerializer = self[optionArgs[1]];
             // this.containerSerializer = new Function(optionArgs[1]);
-            this.containerSerializer = window[optionArgs[1]];
+            this.userContSerializer = window[optionArgs[1]];
 
             console.log('this.containerSerializer = ', this.containerSerializer);
+            break;
+         case 'itemSerializer':
+            this.userItemSerializer = window[optionArgs[1]];
+
+            console.log('this.userItemSerializer = ', this.userItemSerializer);
             break;
          case 'serialize':
             console.log('Serialized ');
             // this.serialized = _serialize(document.querySelector(this.sortableSelector));
-            this.serialized = _serialize(document.querySelector(this.sortableSelector), this.containerSerializer);
+            this.serialized = _serialize(document.querySelector(this.sortableSelector), this.userContSerializer, this.userItemSerializer);
 
             console.log('this.serialize = ', this.serialized);
             break;
@@ -323,14 +330,20 @@ sortable.userSerializer = () => {
    };
 };
 
-window.userSerializer = () => {
+window.userContSerializer = () => {
    return {
       length: 20,
    };
 };
 
+window.userItemSerializer = (item) => {
+   item.description = 'user serialize';
+   return item;
+};
+
 console.log('this = ', self);
-sortable.addOption('containerSerializer userSerializer');
+sortable.addOption('containerSerializer userContSerializer');
+sortable.addOption('itemSerializer userItemSerializer');
 
 sortable.addOption('serialize');
 console.log(sortable.serialized);
