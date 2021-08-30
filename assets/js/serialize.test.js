@@ -1,9 +1,12 @@
-export default function _serialize(
+function _serialize(
    sortableContainer,
    customContainerSerializer = (serializedContainer) => serializedContainer,
-   customItemSerializer = (serializedItem) => serializedItem,
+   customItemSerializer = (serializedItem) => serializedItem
 ) {
-   
+   if (typeof sortableContainer != 'HTMLElement') {
+      throw new Error('_serialize: You need to provide an ul list container');
+   }
+
    if (typeof customItemSerializer !== 'function' || typeof customContainerSerializer !== 'function') {
       throw new Error('Serialize: You need to provide a valid serializer for items and the container');
    }
@@ -35,3 +38,14 @@ export default function _serialize(
       items: serializedItems.map((item) => customItemSerializer(item)),
    };
 }
+
+describe('Testing serialize', () => {
+   test('_serialize: Container must to be HTMLElement', () => {
+      expect(() => _serialize('fake')).toThrow('_serialize: You need to provide an ul list container');
+   });
+
+//    test('Dom element with no children', () => {
+//       const div = document.createElement('div');
+//       expect(() => _serialize(div)).toThrow('_serialize: Ul container children list length must be more than 0');
+//    });
+});
