@@ -1,9 +1,14 @@
+/**
+ * @jest-environment jsdom
+ */
+
 function _serialize(
    sortableContainer,
    customContainerSerializer = (serializedContainer) => serializedContainer,
    customItemSerializer = (serializedItem) => serializedItem
 ) {
-   if (typeof sortableContainer != 'HTMLElement') {
+   console.log('');
+   if (!sortableContainer || !sortableContainer.matches || !sortableContainer.matches('ul')) {
       throw new Error('_serialize: You need to provide an ul list container');
    }
 
@@ -40,12 +45,18 @@ function _serialize(
 }
 
 describe('Testing serialize', () => {
-   test('_serialize: Container must to be HTMLElement', () => {
+   test('_serialize: Container must to be an ul element', () => {
+      expect(() => _serialize(null)).toThrow('_serialize: You need to provide an ul list container');
+   });
+   test('_serialize: Container must to be an ul element', () => {
       expect(() => _serialize('fake')).toThrow('_serialize: You need to provide an ul list container');
    });
 
-//    test('Dom element with no children', () => {
-//       const div = document.createElement('div');
-//       expect(() => _serialize(div)).toThrow('_serialize: Ul container children list length must be more than 0');
-//    });
+   test('Dom element with no children', () => {
+      const div = document.createElement('ul');
+      //   div.innerHTML = 'Hello';
+      document.body.appendChild(div);
+      console.log('typeof div = ', typeof div);
+      expect(() => _serialize(div)).toThrow('_serialize: Ul container children list length must be more than 0');
+   });
 });
