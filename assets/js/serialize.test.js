@@ -61,7 +61,7 @@ describe('Testing serialize', () => {
       expect(() => _serialize(div)).toThrow('_serialize: Ul container children list length must be more than 0');
    });
 
-   test('empty sortable container', () => {
+   test('check returned serialized object with two li elements', () => {
       const ul = document.createElement('ul');
       const li1 = document.createElement('li');
       const li2 = document.createElement('li');
@@ -74,30 +74,24 @@ describe('Testing serialize', () => {
       // expect(() => _serialize(div)).toThrow('_serialize: Ul container children list length must be more than 0');
       console.log('---Serialize (ul)', _serialize(ul));
        expect(_serialize(ul)).toEqual({
-          items: [],
+          items: [
+             {
+                parent: ul,
+                node: li1,
+                html: li1.innerHTML || '',
+                index: 0,
+             },
+             {
+                parent: ul,
+                node: li2,
+                html: li2.innerHTML || '',
+                index: 1,
+             },
+          ],
           container: {
              node: ul,
              itemCount: 2,
           },
        });
-      
-      // expect(_serialize(ul)).toEqual({
-      //       items: [],
-      //       container: {
-      //          node: ul,
-      //          itemCount: 0,
-      //       },
-      //    },
-      // );
-
-      // expect(_serialize(ul)).toEqual(
-      //    expect.objectContaining({
-      //       items: expect.arrayContaining([]),
-      //       container: expect.objectContaining({
-      //          node: ul,
-      //          itemCount: 0,
-      //       }),
-      //    })
-      // );
    });
 });

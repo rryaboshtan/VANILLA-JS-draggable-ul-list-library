@@ -74,8 +74,8 @@ function _serialize(
 
    return {
       container: customContainerSerializer(container),
-      items: [],
-      // items: serializedItems.map((item) => customItemSerializer(item)),
+      // items: [],
+      items: serializedItems.map((item) => customItemSerializer(item)),
    };
 }
 
