@@ -1,4 +1,5 @@
-import _serialize from './serialize.js';
+// import _serialize from './serialize.js';
+const _serialize = require('./serialize');
 
 let dragging;
 //========================================main class============================================
@@ -17,7 +18,7 @@ class Sortable {
       this.init();
    }
    get Serialized() {
-      return this._serialized
+      return this._serialized;
    }
 
    init() {

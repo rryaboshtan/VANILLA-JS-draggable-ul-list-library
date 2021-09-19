@@ -3,8 +3,9 @@
    "version": "0.3.3",
    "description": "Library for creating and manipulating draggable html ul lists",
    "main": "index.js",
+   "type": "module",
    "scripts": {
-      "test": "jest"
+      "test": "jest --coverage"
    },
    "repository": {
       "type": "git",
