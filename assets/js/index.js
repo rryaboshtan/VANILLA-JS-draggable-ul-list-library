@@ -1,5 +1,5 @@
-// import _serialize from './serialize.js';
-const _serialize = require('./serialize');
+import _serialize from './serialize.js';
+// const _serialize = require('./serialize');
 
 let dragging;
 //========================================main class============================================

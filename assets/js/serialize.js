@@ -3,7 +3,7 @@
 //    customContainerSerializer = (serializedContainer) => serializedContainer,
 //    customItemSerializer = (serializedItem) => serializedItem,
 // ) {
-   
+
 //    if (!customItemSerializer || !customContainerSerializer || typeof customItemSerializer !== 'function' || typeof customContainerSerializer !== 'function') {
 //       throw new Error('Serialize: You need to provide a valid serializer for items and the container');
 //    }
@@ -79,4 +79,5 @@ function _serialize(
    };
 }
 
-module.exports = _serialize;
+// module.exports = _serialize;
+export default _serialize;
