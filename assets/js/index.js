@@ -3,7 +3,7 @@ import _serialize from './serialize.js';
 
 let dragging;
 //========================================main class============================================
-class Sortable {
+class Draggable {
    constructor(sortableSelector, options) {
       this.sortableSelector = sortableSelector;
       this.options = options || '';
@@ -230,8 +230,8 @@ class Sortable {
    }
 }
 
-const sortable = new Sortable('.sortable', 'connected');
-const connected = new Sortable('.connected');
+const sortable = new Draggable('.sortable', 'connected');
+const connected = new Draggable('.connected');
 
 connected.addOption('deactive-elem :not(.other)');
 
